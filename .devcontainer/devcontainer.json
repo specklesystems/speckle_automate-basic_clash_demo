@@ -1,39 +1,24 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/python
 {
-  "name": "Python 3",
+  "name": "speckle-automate-basic-clash-demo",
   // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-  "image": "mcr.microsoft.com/devcontainers/python:1-3.11-bullseye",
-  "features": {
-    "ghcr.io/devcontainers-contrib/features/poetry:2": {}
-  },
-
-  "remoteEnv": {
-    "SPECKLE_TOKEN": "foobar"
-  },
-  "containerEnv": {
-    "SPECKLE_TOKEN": "asdfasdf"
-  },
-
-  // Features to add to the dev container. More info: https://containers.dev/features.
-  // "features": {},
-
-  // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  // "forwardPorts": [],
+  "dockerFile": "../Dockerfile",
 
   // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "cp .env.example .env && POETRY_VIRTUALENVS_IN_PROJECT=true poetry install --no-root",
+  // "postCreateCommand": "poetry install --no-root",
 
   // Configure tool-specific properties.
   "customizations": {
     "vscode": {
       // Add the IDs of extensions you want installed when the container is created.
       "extensions": [
-        "ms-python.vscode-pylance",
         "ms-python.python",
-        "ms-python.black-formatter",
+        "mikestead.dotenv",
         "streetsidesoftware.code-spell-checker",
-        "mikestead.dotenv"
+        "ms-python.vscode-pylance",
+        "ms-python.black-formatter",
+        "charliermarsh.ruff"
       ]
     }
   }

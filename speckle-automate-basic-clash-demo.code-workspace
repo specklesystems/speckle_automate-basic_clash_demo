@@ -1,0 +1,25 @@
+{
+  "folders": [
+    {
+      "path": ".",
+      "name": "🧑🏻‍💻 src",
+      "workspaceFolder": true
+    },
+    {
+      "name": "🐍 PyMesh Docs",
+      "path": "../../root/PyMesh/docs"
+    }
+  ],
+  "settings": {
+    "cSpell.words": [
+      "charliermarsh",
+      "mikestead",
+      "pydantic",
+      "pylance",
+      "Pymesh",
+      "recolorized",
+      "Revit",
+      "specklepy"
+    ]
+  }
+}
