@@ -4,10 +4,6 @@
       "path": ".",
       "name": "🧑🏻‍💻 src",
       "workspaceFolder": true
-    },
-    {
-      "name": "🐍 PyMesh Docs",
-      "path": "../../root/PyMesh/docs"
     }
   ],
   "settings": {
