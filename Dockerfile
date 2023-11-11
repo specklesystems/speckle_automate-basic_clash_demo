@@ -198,7 +198,30 @@ RUN echo "deb http://ftp.us.debian.org/debian unstable main contrib non-free" >>
 
 # Build and install PyMesh
 WORKDIR /root/PyMesh
-RUN git submodule update --init 
+# RUN git submodule update --init 
+
+RUN git submodule update --init third_party/libigl
+RUN git submodule update --init third_party/carve
+RUN git submodule update --init third_party/cork
+RUN git submodule update --init third_party/tetgen
+RUN git submodule update --init third_party/triangle
+RUN git submodule update --init third_party/qhull
+RUN git submodule update --init third_party/Clipper
+RUN git submodule update --init third_party/eigen
+RUN git submodule update --init third_party/quartet
+RUN git submodule update --init third_party/cgal
+RUN git submodule update --init third_party/pybind11
+RUN git submodule update --init third_party/geogram
+RUN git submodule update --init third_party/draco
+RUN git submodule update --init third_party/TetWild
+RUN git submodule update --init third_party/WindingNumber
+RUN git submodule update --init third_party/tbb
+RUN git submodule update --init third_party/jigsaw
+RUN git submodule update --init third_party/mmg
+RUN git submodule update --init third_party/json
+RUN git submodule update --init third_party/spdlog
+RUN git submodule update --init third_party/fmt
+
 RUN pip install -r $PYMESH_PATH/python/requirements.txt
 RUN ./setup.py bdist_wheel
 RUN rm -rf build_3.7 third_party/build 
