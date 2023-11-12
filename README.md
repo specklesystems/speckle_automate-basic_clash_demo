@@ -1,39 +1,43 @@
-# Speckle Automate function template - Python
+[![build and deploy Speckle functions](https://github.com/specklesystems/speckle_automate-basic_clash_demo/actions/workflows/main.yml/badge.svg)](https://github.com/specklesystems/speckle_automate-basic_clash_demo/actions/workflows/main.yml)
 
-This is a template repository for a Speckle Automate functions written in python
-using the [specklepy](https://pypi.org/project/specklepy/) SDK to interact with Speckle data.
+# Speckle Automate Function: Basic Clash Analysis Demo
 
-This template contains the full scaffolding required to publish a function to the automate environment.
-Also has some sane defaults for a development environment setups.
+## Overview
+This repository hosts the Basic Clash Analysis Demo for Speckle Automate, tailored for the AEC industry. It demonstrates automated clash detection using complex third-party libraries to analyze elements from both a static reference model and a dynamic model.
 
-## Getting started
+## ⚠️ Disclaimer: Conceptual Demonstration Only
+**IMPORTANT: This function is a conceptual model and is not intended for actual use in production environments. It serves as a demonstration to illustrate automated clash detection principles in Speckle Automate and the use of third-party libraries for advanced analysis.**
 
-1. Use this template repository to create a new repository in your own / organization's profile.
+## Functionality
+- **Element Type Selection:** Users specify element categories for clash tests.
+- **Automated Detection:** Demonstrates real-time clash detection as the dynamic model evolves.
+- **Clash Reporting:** Generates reports on detected clashes.
+- **Integration Example:** Illustrates potential integration with Speckle's platform and AEC software tools.
+- **Notification Simulation:** Simulates automated notifications about clashes.
 
-Register the function 
+### How It Works
+The function analyzes elements from a static reference model and a dynamic model, identifying potential geometric conflicts when the dynamic model is updated.
 
-### Add new dependencies
+### Utilization of Third-Party Libraries
+This demo showcases the ability to incorporate complex third-party libraries for detailed analysis, extending the functionality of Speckle Automate beyond its core features. In this case a custom build of PyMesh and its c++ library dependencies are included in the Dockerfile.
 
-To add new python package dependencies to the project, use:
-`$ poetry add pandas`
+### Containerization and Deployment
+- **Dockerization:** The included Dockerfile demonstrates how the project can be containerized, emphasizing the ease of deployment in Speckle Automate.
+- **Automate Deployment:** Highlights the potential for easy deployment of containerized projects within the Speckle ecosystem.
 
-### Change launch variables
+## Note
+This function is designed for educational purposes and is not equipped for real-world AEC projects.
 
-describe how the launch.json should be edited
+---
 
-### Github Codespaces
+**Reminder:** This repository is a conceptual demonstration for automated clash detection and the use of third-party libraries in Speckle Automate.
 
-Create a new repo from this template, and use the create new code.
+## Using this Speckle Function
+1. **Create a New Speckle Automation**: Set up in the Speckle dashboard.
+2. **Configure the Function**: Choose the "Basic Clash Analysis" function.
+3. **Run and Review**: Execute the function and review the clash reports.
 
-### Using this Speckle Function
 
-1. [Create](https://automate.speckle.dev/) a new Speckle Automation.
-1. Select your Speckle Project and Speckle Model.
-1. Select the existing Speckle Function named [`Random comment on IFC beam`](https://automate.speckle.dev/functions/e110be8fad).
-1. Enter a phrase to use in the comment.
-1. Click `Create Automation`.
-
-## Getting Started with creating your own Speckle Function
 
 1. [Register](https://automate.speckle.dev/) your Function with [Speckle Automate](https://automate.speckle.dev/) and select the Python template.
 1. A new repository will be created in your GitHub account.

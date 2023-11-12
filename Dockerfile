@@ -175,7 +175,7 @@ ARG BRANCH=main
 ARG NUM_CORES=10
 
 # Clone a git repository
-RUN /bin/sh -c "git clone --single-branch -b $BRANCH https://github.com/nuvolos-cloud/PyMesh.git"
+RUN /bin/sh -c "git clone --single-branch --depth 1 -b $BRANCH https://github.com/nuvolos-cloud/PyMesh.git"
 
 # Set environment variables
 ENV PYMESH_PATH=/root/PyMesh
@@ -199,69 +199,28 @@ RUN echo "deb http://ftp.us.debian.org/debian unstable main contrib non-free" >>
 # Build and install PyMesh
 WORKDIR /root/PyMesh
 
-
-# RUN git submodule update --init 
 RUN git clone --depth 1 https://github.com/PyMesh/cgal.git $PYMESH_PATH/third_party/cgal
-
-# RUN git submodule update --init third_party/libigl
 RUN git clone --depth 1 https://github.com/PyMesh/libigl.git $PYMESH_PATH/third_party/libigl
-
-# RUN git submodule update --init third_party/carve
 RUN git clone --depth 1 https://github.com/PyMesh/carve.git $PYMESH_PATH/third_party/carve
-
-# RUN git submodule update --init third_party/cork
 RUN git clone --depth 1 https://github.com/PyMesh/cork.git $PYMESH_PATH/third_party/cork
-
-# RUN git submodule update --init third_party/tetgen
 RUN git clone --depth 1 https://github.com/PyMesh/tetgen.git $PYMESH_PATH/third_party/tetgen
-
-RUN git submodule update --init third_party/triangle
-# RUN git clone --depth 1 https://github.com/PyMesh/triangle.git $PYMESH_PATH/third_party/triangle
-
-# RUN git submodule update --init third_party/qhull
 RUN git clone --depth 1 https://github.com/PyMesh/qhull.git $PYMESH_PATH/third_party/qhull
-
-# RUN git submodule update --init third_party/Clipper
 RUN git clone --depth 1 https://github.com/PyMesh/Clipper.git $PYMESH_PATH/third_party/Clipper
-
-# RUN git submodule update --init third_party/eigen
 RUN git clone --depth 1 https://github.com/PyMesh/eigen.git $PYMESH_PATH/third_party/eigen
-
-RUN git submodule update --init third_party/quartet
-# RUN git clone --depth 1 https://github.com/PyMesh/quartet.git $PYMESH_PATH/third_party/quartet
-
-# RUN git submodule update --init third_party/pybind11
 RUN git clone --depth 1 https://github.com/PyMesh/pybind11.git $PYMESH_PATH/third_party/pybind11
-
-# RUN git submodule update --init third_party/geogram
 RUN git clone --depth 1 https://github.com/PyMesh/geogram.git $PYMESH_PATH/third_party/geogram
-
-# RUN git submodule update --init third_party/draco
 RUN git clone --depth 1 https://github.com/PyMesh/draco.git $PYMESH_PATH/third_party/draco
-
-# RUN git submodule update --init third_party/TetWild
 RUN git clone --depth 1 https://github.com/PyMesh/TetWild.git $PYMESH_PATH/third_party/TetWild
-
-# RUN git submodule update --init third_party/WindingNumber
 RUN git clone --depth 1 https://github.com/PyMesh/WindingNumber.git $PYMESH_PATH/third_party/WindingNumber
-
-# RUN git submodule update --init third_party/tbb
 RUN git clone --depth 1 https://github.com/PyMesh/tbb.git $PYMESH_PATH/third_party/tbb
-
-# RUN git submodule update --init third_party/jigsaw
 RUN git clone --depth 1 https://github.com/PyMesh/jigsaw.git $PYMESH_PATH/third_party/jigsaw
-
-RUN git submodule update --init third_party/mmg
-# RUN git clone --depth 1 https://github.com/PyMesh/mmg.git $PYMESH_PATH/third_party/mmg
-
-# RUN git submodule update --init third_party/fmt
 RUN git clone --depth 1 https://github.com/fmtlib/fmt.git $PYMESH_PATH/third_party/fmt
-
-# RUN git submodule update --init third_party/spdlog
 RUN git clone --depth 1 https://github.com/gabime/spdlog.git $PYMESH_PATH/third_party/spdlog
 
+RUN git submodule update --init third_party/triangle
+RUN git submodule update --init third_party/quartet
+RUN git submodule update --init third_party/mmg
 RUN git submodule update --init third_party/json
-# RUN git clone --depth 1  https://github.com/nlohmann/json.git $PYMESH_PATH/third_party/json
 
 RUN pip install -r $PYMESH_PATH/python/requirements.txt
 RUN ./setup.py bdist_wheel
@@ -273,8 +232,6 @@ RUN pip install dist/pymesh2*.whl
 # Build third-party libraries for PyMesh
 WORKDIR /root/PyMesh/third_party
 RUN /bin/sh -c "python ./build.py mmg && python ./build.py tetgen"
-
-
 
 # We install poetry to generate a list of dependencies which will be required by our application
 RUN pip install poetry
