@@ -20,7 +20,7 @@ from trimesh import Trimesh
 
 from Geometry.mesh import speckle_to_element, Element
 from Rules.checks import ElementCheckRules
-from flatten import extract_base_and_transform
+from Utilities.flatten import extract_base_and_transform
 
 
 class FunctionInputs(AutomateBase):
