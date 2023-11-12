@@ -1,5 +1,5 @@
 """Helper module for a simple speckle object tree flattening."""
-from typing import Tuple, Optional
+from typing import Tuple, Optional, List
 
 from specklepy.objects import Base
 from specklepy.objects.other import Instance, Transform
