@@ -9,5 +9,9 @@ class mypymesh:
             return 0
 
     @staticmethod
-    def boolean(_other, _operation):
+    def boolean(mesh_a, mesh_b, operation):
         return mypymesh.Mesh([], [])
+
+    @staticmethod
+    def form_mesh(vertices, faces):
+        return mypymesh.Mesh(vertices, faces)

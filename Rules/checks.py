@@ -30,12 +30,12 @@ class ElementCheckRules:
         """Rule: Check if a parameter is displayable."""
         return (
             lambda parameter: parameter.displayValue
-            and parameter.displayValue is not None
+                              and parameter.displayValue is not None
         )
 
     @staticmethod
     def speckle_type_rule(
-        desired_type: Union[str, List[str]]
+            desired_type: Union[str, List[str]]
     ) -> Callable[[Base], bool]:
         """Rule: Check if a parameter's speckle_type matches the desired type."""
 
@@ -43,9 +43,7 @@ class ElementCheckRules:
         if isinstance(desired_type, str):
             desired_type = [desired_type]
 
-        print(desired_type)
-
         return (
             lambda speckle_object: getattr(speckle_object, "speckle_type", None)
-            in desired_type
+                                   in desired_type
         )

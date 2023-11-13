@@ -83,6 +83,9 @@ def check_for_clash(
                 continue
 
             intersection = pymesh.boolean(latest_pymesh, ref_pymesh, operation="intersection")
+
+            print(f"intersection: {intersection}")
+
             if intersection and intersection.volume > 0:
                 severity = intersection.volume / min(
                     ref_pymesh.volume, latest_pymesh.volume

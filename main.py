@@ -41,14 +41,15 @@ class FunctionInputs(AutomateBase):
         title="Tolerance",
         description="Specify the tolerance value for the analysis. \
         Negative values relaxes the test, positive values make it more strict.",
-        readonly=True,
+        json_schema_extra={
+            "readOnly": True,
+        }
     )
     tolerance_unit: str = Field(  # Using the SpecklePy Units enum here
         default=Units.mm,
-        json_schema_extra={"examples": ["mm", "cm", "m"]},
+        json_schema_extra={"examples": ["mm", "cm", "m"], "readOnly": True},
         title="Tolerance Unit",
         description="Unit of the tolerance value.",
-        readonly=True,
     )
 
 
@@ -114,6 +115,7 @@ def automate_function(
         for base_obj, id, transform in reference_objects
         if visible_beams_rule(base_obj)
     ]
+
     latest_displayable_objects = [
         (base_obj, id, transform)
         for base_obj, id, transform in latest_objects
@@ -147,6 +149,11 @@ def automate_function(
     # all clashes count
     all_objects_count = len(reference_mesh_elements) + len(latest_mesh_elements)
     all_clashes_count = len(clashes)
+
+    print(f"Clash detection report: {all_clashes_count} clashes found between {all_objects_count} objects.")
+
+    print(f"Reference objects: {len([x for x in reference_objects])}.")
+    print(f"Latest objects: {len([x for x in latest_objects])}.")
 
     clash_report_message = (
         f"Clash detection report: {all_clashes_count} clashes found "
