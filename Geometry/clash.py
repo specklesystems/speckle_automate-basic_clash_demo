@@ -74,6 +74,7 @@ def check_for_clash(
     Returns:
         Tuple[str, str, float]: A tuple containing the IDs of the clashing elements and the severity, if a clash is found.
     """
+
     for ref_mesh in ref_element.meshes:
         for latest_mesh in latest_element.meshes:
             ref_pymesh = cast(ref_mesh, pymesh.Mesh)
@@ -83,8 +84,6 @@ def check_for_clash(
                 continue
 
             intersection = pymesh.boolean(latest_pymesh, ref_pymesh, operation="intersection")
-
-            print(f"intersection: {intersection}")
 
             if intersection and intersection.volume > 0:
                 severity = intersection.volume / min(
@@ -129,6 +128,9 @@ def detect_and_report_clashes(
         tolerance: float,
         automate_context: AutomationContext,
 ) -> list[tuple[str, str, float]]:
+    print(f"{len(reference_elements[0].meshes)} reference meshes")
+    print(f"{len(latest_elements[0].meshes)} latest meshes")
+
     clashes = detect_clashes(reference_elements, latest_elements, tolerance)
 
     total_clashes = len(clashes)

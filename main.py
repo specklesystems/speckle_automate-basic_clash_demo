@@ -70,9 +70,10 @@ def automate_function(
     changed_model_version = automate_context.receive_version()
 
     try:
-        reference_model_version = get_reference_model(
+        reference_model_version, reference_model_id, reference_model_version_id = get_reference_model(
             automate_context, function_inputs.static_model_name
         )
+        print(f"Reference model id: {reference_model_id}, version id: {reference_model_version_id}")
 
     except Exception as ex:
         automate_context.mark_run_failed(status_message=str(ex))
@@ -164,6 +165,10 @@ def automate_function(
         f"{percentage_latest_objects_clashing}%."
     )
 
+    reference_view = [f"{reference_model_id}@{reference_model_version_id}"]
+
+    automate_context.set_context_view(reference_view)
+
     automate_context.mark_run_success(
         status_message="Clash detection completed. " + clash_report_message
     )
@@ -171,7 +176,7 @@ def automate_function(
 
 def get_reference_model(
         automate_context: AutomationContext, static_model_name: str
-) -> Base:
+) -> tuple[Base, Optional[str], Optional[str]]:
     # the static reference model will be retrieved from the project using model name stored in the inputs
     speckle_client = automate_context.speckle_client
     project_id = automate_context.automation_run_data.project_id
@@ -205,7 +210,7 @@ def get_reference_model(
         remote_transport,
     )  # receive the static model
 
-    return latest_reference_model_version
+    return latest_reference_model_version, model.id, reference_model_commits[0].id
 
 
 # make sure to call the function with the executor
