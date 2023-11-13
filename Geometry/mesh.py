@@ -1,10 +1,15 @@
-from typing import Union, Type, TYPE_CHECKING
+from typing import Union, Type
 
+try:
+    import pymesh
+except ImportError:
+    from Geometry.mocks import mypymesh
 
-import pymesh
-
+    pymesh = mypymesh
 
 import trimesh
+
+from Geometry.helpers import triangulate_face
 
 
 class MockPyMesh:
@@ -39,7 +44,7 @@ def pymesh_to_trimesh(mesh: pymesh.Mesh) -> trimesh.Trimesh:
 
 
 def cast(
-    mesh: Union[trimesh.Trimesh, pymesh.Mesh], target_type: Type
+        mesh: Union[trimesh.Trimesh, pymesh.Mesh], target_type: Type
 ) -> Union[trimesh.Trimesh, pymesh.Mesh]:
     """
     Casts a mesh object to a specified type.
@@ -74,7 +79,7 @@ def speckle_mesh_to_trimesh(input_mesh: SpeckleMesh) -> trimesh.Trimesh:
         face_vertex_count = input_mesh.faces[i]
         i += 1  # Skip the vertex count
 
-        face_vertex_indices = input_mesh.faces[i : i + face_vertex_count]
+        face_vertex_indices = input_mesh.faces[i: i + face_vertex_count]
 
         face_vertices = [
             Vector.from_list(vertices[idx].tolist()) for idx in face_vertex_indices

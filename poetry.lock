@@ -775,19 +775,6 @@ files = [
 typing-extensions = ">=4.6.0,<4.7.0 || >4.7.0"
 
 [[package]]
-name = "pymesh"
-version = "1.0.2"
-description = "Library for manipulating (Translate, Rotate and Scale) 3D data using numpy."
-optional = false
-python-versions = "*"
-files = [
-    {file = "pymesh-1.0.2.tar.gz", hash = "sha256:7032cd5c53cd9d93b31b6033bfdf7a61ca482ce4dc10d70411a1f392df095deb"},
-]
-
-[package.dependencies]
-numpy = "*"
-
-[[package]]
 name = "pytest"
 version = "7.4.3"
 description = "pytest: simple powerful testing with Python"
@@ -1287,4 +1274,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "5e736eb0d2aeb78aaf6b2252f4f3e011b6bca230716f2d0e07c29d3b3dc796ce"
+content-hash = "3abedc1c21df21ba5ab28f1ea6dc49c8a84c768e0f8f155e5c619ca3fd023765"
