@@ -1,6 +1,10 @@
 from typing import Union, Type
 
-import pymesh
+try:
+    import pymesh
+except ImportError:
+    pymesh = None 
+
 import trimesh
 
 

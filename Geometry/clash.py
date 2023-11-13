@@ -1,7 +1,11 @@
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from typing import List, Tuple, Any, Optional
 
-import pymesh
+try:
+    import pymesh
+except ImportError:
+    pymesh = None  # Or handle it in another appropriate way
+
 from speckle_automate import AutomationContext
 
 from Geometry.element import Element
