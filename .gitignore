@@ -311,3 +311,14 @@ pyrightconfig.json
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,python,pycharm
+Dockerfile copy
+Dockerfile copy 2
+.idea/git_toolbox_prj.xml
+.gitignore
+.idea/misc.xml
+.idea/inspectionProfiles/Project_Default.xml
+.gitignore
+.idea/vcs.xml
+.idea/speckle-automate-basic-clash-demo.iml
+.idea/modules.xml
+.idea/inspectionProfiles/profiles_settings.xml
