@@ -2,6 +2,7 @@
 
 use the automation_context module to wrap your function in an Automate context helper
 """
+from collections import defaultdict
 from typing import Optional
 
 from pydantic import Field
@@ -132,17 +133,23 @@ def automate_function(
 
     tolerance = function_inputs.tolerance
 
+    if len(reference_mesh_elements) == 0 or len(latest_mesh_elements) == 0:
+        automate_context.mark_run_failed(
+            status_message="Clash detection failed. No objects to compare."
+        )
+        return
+    
     clashes = detect_and_report_clashes(
         reference_mesh_elements, latest_mesh_elements, tolerance, automate_context
     )
-
+   
     percentage_reference_objects_clashing = (
-            len(set([ref_id for ref_id, latest_id, severity in clashes]))
+            len(set([ref_id for ref_id, latest_id in clashes]))
             / len(reference_mesh_elements)
             * 100
     )
     percentage_latest_objects_clashing = (
-            len(set([latest_id for ref_id, latest_id, severity in clashes]))
+            len(set([latest_id for ref_id, latest_id in clashes]))
             / len(latest_mesh_elements)
             * 100
     )
@@ -150,11 +157,6 @@ def automate_function(
     # all clashes count
     all_objects_count = len(reference_mesh_elements) + len(latest_mesh_elements)
     all_clashes_count = len(clashes)
-
-    print(f"Clash detection report: {all_clashes_count} clashes found between {all_objects_count} objects.")
-
-    print(f"Reference objects: {len([x for x in reference_objects])}.")
-    print(f"Latest objects: {len([x for x in latest_objects])}.")
 
     clash_report_message = (
         f"Clash detection report: {all_clashes_count} clashes found "
