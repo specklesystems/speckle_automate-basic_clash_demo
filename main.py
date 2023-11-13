@@ -2,7 +2,7 @@
 
 use the automation_context module to wrap your function in an Automate context helper
 """
-from typing import List, Optional, Tuple
+from typing import Optional
 
 from pydantic import Field
 from speckle_automate import (
@@ -16,9 +16,9 @@ from specklepy.objects import Base
 from specklepy.objects.other import Transform
 from specklepy.objects.units import Units
 from specklepy.transports.server import ServerTransport
-from trimesh import Trimesh
 
-from Geometry.mesh import speckle_to_element, Element
+from Geometry.clash import detect_and_report_clashes
+from Geometry.element import speckle_to_element
 from Rules.checks import ElementCheckRules
 from Utilities.flatten import extract_base_and_transform
 
@@ -31,23 +31,27 @@ class FunctionInputs(AutomateBase):
     https://docs.pydantic.dev/latest/usage/models/
     """
 
-    tolerance: float = Field(
-        default=25.0,
-        title="Tolerance",
-        description="Specify the tolerance value for the analysis. \
-            Negative values relaxes the test, positive values make it more strict.",
-    )
-    tolerance_unit: str = Field(  # Using the SpecklePy Units enum here
-        default=Units.mm,
-        json_schema_extra={"examples": ["mm", "cm", "m"]},
-        title="Tolerance Unit",
-        description="Unit of the tolerance value.",
-    )
     static_model_name: str = Field(
         ...,
         title="Static Model Name",
         description="Name of the static structural model.",
     )
+
+
+tolerance: float = Field(
+    default=25.0,
+    title="Tolerance",
+    description="Specify the tolerance value for the analysis. \
+    Negative values relaxes the test, positive values make it more strict.",
+    readonly=True,
+)
+tolerance_unit: str = Field(  # Using the SpecklePy Units enum here
+    default=Units.mm,
+    json_schema_extra={"examples": ["mm", "cm", "m"]},
+    title="Tolerance Unit",
+    description="Unit of the tolerance value.",
+    readonly=True,
+)
 
 
 def automate_function(
@@ -128,76 +132,41 @@ def automate_function(
     # using trimesh library process all these meshes in the form of A vs B
     # and get the clashes
 
-    clashes = detect_clashes(
-        reference_mesh_elements, latest_mesh_elements, function_inputs.tolerance
+    clashes = detect_and_report_clashes(
+        reference_mesh_elements, latest_mesh_elements, tolerance, automate_context
     )
 
-    print(len(clashes))
+    # all object count
+    # all reference objects count
+    # all latest objects count
 
-    automate_context.mark_run_success(status_message="Clash detection completed.")
+    percentage_reference_objects_clashing = (
+        len(set([ref_id for ref_id, latest_id, severity in clashes]))
+        / len(reference_mesh_elements)
+        * 100
+    )
+    percentage_latest_objects_clashing = (
+        len(set([latest_id for ref_id, latest_id, severity in clashes]))
+        / len(latest_mesh_elements)
+        * 100
+    )
 
+    # all clashes count
+    all_objects_count = len(reference_mesh_elements) + len(latest_mesh_elements)
+    all_clashes_count = len(clashes)
 
+    clash_report_message = (
+        f"Clash detection report: {all_clashes_count} clashes found "
+        f"between {all_objects_count} objects. "
+        f"Percentage of reference objects clashing: "
+        f"{percentage_reference_objects_clashing}%. "
+        f"Percentage of latest objects clashing: "
+        f"{percentage_latest_objects_clashing}%."
+    )
 
-def detect_clashes(
-    elements_a: List[Element], elements_b: List[Element], length_tolerance: float
-) -> List[Tuple[Element, Element]]:
-    """
-    Detects clashes between two sets of elements with a specified tolerance.
-
-    This function checks each combination of elements from `elements_a` and `elements_b`
-    to see if any of their respective meshes intersect within the specified tolerance.
-    If a clash is detected between any mesh from an element in `elements_a` and any mesh
-    from an element in `elements_b`, the pair of elements is added to the results.
-
-    Args:
-    - elements_a (List[Element]): A list of `Element` objects to be checked for clashes.
-    - elements_b (List[Element]): A second list of `Element` objects to be checked for clashes against `elements_a`.
-    - length_tolerance (float): The distance to offset mesh vertices for intersection check.
-
-    Returns:
-    - List[Tuple[Element, Element]]: A list of tuples where each tuple contains a pair of `Element` objects that clash.
-    """
-
-    # Use list comprehension to get pairs of elements that have clashing meshes
-    clashes = [
-        (element_a, element_b)
-        for element_a in elements_a
-        for element_b in elements_b
-        if any(
-            check_intersection_with_tolerance(mesh_a, mesh_b, length_tolerance)
-            for mesh_a in element_a.meshes
-            for mesh_b in element_b.meshes
-        )
-    ]
-
-    return clashes
-
-
-def check_intersection_with_tolerance(
-    mesh_a: Trimesh, mesh_b: Trimesh, tolerance: float
-) -> bool:
-    """
-    Checks for intersections between two meshes within a specified tolerance.
-
-    Args:
-    - mesh_a: The first mesh to check.
-    - mesh_b: The second mesh to check.
-    - tolerance (float): The distance to offset mesh vertices for intersection check.
-                         Positive values expand the mesh, negative values contract it.
-
-    Returns:
-    - bool: True if the meshes intersect within the specified tolerance, otherwise False.
-    """
-    half_tolerance = tolerance / 2.0  # TODO: how to shrink bloat mesh?
-    offset_mesh_a: Trimesh = mesh_a  # mesh_a.offset_mesh(half_tolerance)
-    offset_mesh_b: Trimesh = mesh_b  # mesh_b.offset_mesh(half_tolerance)
-
-    # return offset_mesh_a.intersection(offset_mesh_b).volume > 0 TODO: Install Blender as the engine
-
-    # return a random boolean for testing - significantly favouring false
-    import random
-
-    return random.random() < 0.05
+    automate_context.mark_run_success(
+        status_message="Clash detection completed. " + clash_report_message
+    )
 
 
 def get_reference_model(
