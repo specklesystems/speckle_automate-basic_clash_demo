@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.10"
 specklepy = "2.17.11"
 trimesh = "^4.0.4"
+pymesh = {git = "https://github.com/PyMesh/PyMesh.git"}
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"

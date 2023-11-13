@@ -1,11 +1,19 @@
-from typing import Union, Type
+from typing import Union, Type, TYPE_CHECKING
 
-try:
-    import pymesh
-except ImportError:
-    pymesh = None 
+
+import pymesh
+
 
 import trimesh
+
+
+class MockPyMesh:
+    def __init__(self, vertices, faces):
+        self.vertices = vertices or []
+        self.faces = faces or []
+
+    def boolean(self, other, operation):
+        return MockPyMesh([], [])
 
 
 def trimesh_to_pymesh(mesh: trimesh.Trimesh) -> pymesh.Mesh:
