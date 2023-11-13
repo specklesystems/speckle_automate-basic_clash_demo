@@ -36,27 +36,25 @@ class FunctionInputs(AutomateBase):
         title="Static Model Name",
         description="Name of the static structural model.",
     )
-
-
-tolerance: float = Field(
-    default=25.0,
-    title="Tolerance",
-    description="Specify the tolerance value for the analysis. \
-    Negative values relaxes the test, positive values make it more strict.",
-    readonly=True,
-)
-tolerance_unit: str = Field(  # Using the SpecklePy Units enum here
-    default=Units.mm,
-    json_schema_extra={"examples": ["mm", "cm", "m"]},
-    title="Tolerance Unit",
-    description="Unit of the tolerance value.",
-    readonly=True,
-)
+    tolerance: float = Field(
+        default=25.0,
+        title="Tolerance",
+        description="Specify the tolerance value for the analysis. \
+        Negative values relaxes the test, positive values make it more strict.",
+        readonly=True,
+    )
+    tolerance_unit: str = Field(  # Using the SpecklePy Units enum here
+        default=Units.mm,
+        json_schema_extra={"examples": ["mm", "cm", "m"]},
+        title="Tolerance Unit",
+        description="Unit of the tolerance value.",
+        readonly=True,
+    )
 
 
 def automate_function(
-    automate_context: AutomationContext,
-    function_inputs: FunctionInputs,
+        automate_context: AutomationContext,
+        function_inputs: FunctionInputs,
 ) -> None:
     """This is an example Speckle Automate function.
 
@@ -129,26 +127,21 @@ def automate_function(
         speckle_to_element(obj) for obj in latest_displayable_objects
     ]
 
-    # using trimesh library process all these meshes in the form of A vs B
-    # and get the clashes
+    tolerance = function_inputs.tolerance
 
     clashes = detect_and_report_clashes(
         reference_mesh_elements, latest_mesh_elements, tolerance, automate_context
     )
 
-    # all object count
-    # all reference objects count
-    # all latest objects count
-
     percentage_reference_objects_clashing = (
-        len(set([ref_id for ref_id, latest_id, severity in clashes]))
-        / len(reference_mesh_elements)
-        * 100
+            len(set([ref_id for ref_id, latest_id, severity in clashes]))
+            / len(reference_mesh_elements)
+            * 100
     )
     percentage_latest_objects_clashing = (
-        len(set([latest_id for ref_id, latest_id, severity in clashes]))
-        / len(latest_mesh_elements)
-        * 100
+            len(set([latest_id for ref_id, latest_id, severity in clashes]))
+            / len(latest_mesh_elements)
+            * 100
     )
 
     # all clashes count
@@ -170,7 +163,7 @@ def automate_function(
 
 
 def get_reference_model(
-    automate_context: AutomationContext, static_model_name: str
+        automate_context: AutomationContext, static_model_name: str
 ) -> Base:
     # the static reference model will be retrieved from the project using model name stored in the inputs
     speckle_client = automate_context.speckle_client
