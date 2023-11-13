@@ -15,7 +15,7 @@ from Geometry.mesh import cast
 
 
 def detect_clashes_old(
-        reference_elements: List[Element], latest_elements: List[Element], _tolerance: float
+    reference_elements: List[Element], latest_elements: List[Element], _tolerance: float
 ) -> list[tuple[str, str, float]]:
     """
     Detect clashes between two sets of mesh elements using Pymesh.
@@ -50,7 +50,7 @@ def detect_clashes_old(
                     )
 
                     if (
-                            intersection and intersection.volume > 0
+                        intersection and intersection.volume > 0
                     ):  # TODO: could tolerance relate to this?
                         severity = intersection.volume / min(
                             ref_pymesh.volume, latest_pymesh.volume
@@ -62,7 +62,7 @@ def detect_clashes_old(
 
 
 def check_for_clash(
-        ref_element: Element, latest_element: Element
+    ref_element: Element, latest_element: Element
 ) -> Optional[tuple[Any, Any, Any]]:
     """
     Check for a clash between two elements and calculate the severity of the clash.
@@ -82,9 +82,7 @@ def check_for_clash(
             if not ref_pymesh or not latest_pymesh:
                 continue
 
-            intersection = pymesh.boolean(
-                latest_pymesh, operation="intersection"
-            )
+            intersection = pymesh.boolean(latest_pymesh, operation="intersection")
             if intersection and intersection.volume > 0:
                 severity = intersection.volume / min(
                     ref_pymesh.volume, latest_pymesh.volume
@@ -94,7 +92,7 @@ def check_for_clash(
 
 
 def detect_clashes(
-        reference_elements: List[Element], latest_elements: List[Element], _tolerance: float
+    reference_elements: List[Element], latest_elements: List[Element], _tolerance: float
 ) -> List[Tuple[str, str, float]]:
     """
     Detect clashes between two sets of mesh elements using parallel processing.
@@ -123,10 +121,10 @@ def detect_clashes(
 
 
 def detect_and_report_clashes(
-        reference_elements: list[Element],
-        latest_elements: list[Element],
-        tolerance: float,
-        automate_context: AutomationContext,
+    reference_elements: list[Element],
+    latest_elements: list[Element],
+    tolerance: float,
+    automate_context: AutomationContext,
 ) -> list[tuple[str, str, float]]:
     clashes = detect_clashes(reference_elements, latest_elements, tolerance)
 
