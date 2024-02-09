@@ -88,8 +88,13 @@ def speckle_mesh_to_trimesh(input_mesh: SpeckleMesh) -> trimesh.Trimesh:
 
     t_mesh = trimesh.Trimesh(vertices=vertices, faces=np.array(faces))
 
-    obbox = t_mesh.bounding_box_oriented
+    return t_mesh
 
-    obbox_mesh = obbox.to_mesh()
+    # code below speeds up the process but is not used in the current implementation.
+    # Bounding boxes could be used for a 2-pass approach to speed up the process.
 
-    return obbox_mesh
+    # obbox = t_mesh.bounding_box_oriented
+
+    # obbox_mesh = obbox.to_mesh()
+
+    # return obbox_mesh
