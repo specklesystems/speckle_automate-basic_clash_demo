@@ -1,7 +1,14 @@
+from collections import defaultdict
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from typing import List, Tuple, Any, Optional
 
-import pymesh
+try:
+    import pymesh
+except ImportError:
+    from Geometry.mocks import mypymesh
+
+    pymesh = mypymesh
+
 from speckle_automate import AutomationContext
 
 from Geometry.element import Element
@@ -9,7 +16,7 @@ from Geometry.mesh import cast
 
 
 def detect_clashes_old(
-    reference_elements: List[Element], latest_elements: List[Element], _tolerance: float
+        reference_elements: List[Element], latest_elements: List[Element], _tolerance: float
 ) -> list[tuple[str, str, float]]:
     """
     Detect clashes between two sets of mesh elements using Pymesh.
@@ -40,11 +47,11 @@ def detect_clashes_old(
                         continue
 
                     intersection = pymesh.boolean(
-                        ref_pymesh, latest_pymesh, operation="intersection"
+                        latest_pymesh, ref_pymesh, operation="intersection"
                     )
 
                     if (
-                        intersection and intersection.volume > 0
+                            intersection and intersection.volume > 0
                     ):  # TODO: could tolerance relate to this?
                         severity = intersection.volume / min(
                             ref_pymesh.volume, latest_pymesh.volume
@@ -56,8 +63,8 @@ def detect_clashes_old(
 
 
 def check_for_clash(
-    ref_element: Element, latest_element: Element
-) -> Optional[tuple[Any, Any, Any]]:
+        ref_element: Element, latest_element: Element
+) -> Optional[tuple[Any, Any]]:
     """
     Check for a clash between two elements and calculate the severity of the clash.
 
@@ -68,6 +75,7 @@ def check_for_clash(
     Returns:
         Tuple[str, str, float]: A tuple containing the IDs of the clashing elements and the severity, if a clash is found.
     """
+
     for ref_mesh in ref_element.meshes:
         for latest_mesh in latest_element.meshes:
             ref_pymesh = cast(ref_mesh, pymesh.Mesh)
@@ -76,20 +84,17 @@ def check_for_clash(
             if not ref_pymesh or not latest_pymesh:
                 continue
 
-            intersection = pymesh.boolean(
-                ref_pymesh, latest_pymesh, operation="intersection"
-            )
+            intersection = pymesh.boolean(latest_pymesh, ref_pymesh, operation="intersection")
+
             if intersection and intersection.volume > 0:
-                severity = intersection.volume / min(
-                    ref_pymesh.volume, latest_pymesh.volume
-                )
-                return ref_element.id, latest_element.id, severity
+
+                return ref_element.id, latest_element.id
     return None
 
 
 def detect_clashes(
-    reference_elements: List[Element], latest_elements: List[Element], _tolerance: float
-) -> List[Tuple[str, str, float]]:
+        reference_elements: List[Element], latest_elements: List[Element], _tolerance: float
+) -> List[Tuple[str, str]]:
     """
     Detect clashes between two sets of mesh elements using parallel processing.
 
@@ -117,31 +122,29 @@ def detect_clashes(
 
 
 def detect_and_report_clashes(
-    reference_elements: list[Element],
-    latest_elements: list[Element],
-    tolerance: float,
-    automate_context: AutomationContext,
-) -> list[tuple[str, str, float]]:
+        reference_elements: list[Element],
+        latest_elements: list[Element],
+        tolerance: float,
+        automate_context: AutomationContext,
+) -> list[tuple[str, str]]:
+
     clashes = detect_clashes(reference_elements, latest_elements, tolerance)
 
-    total_clashes = len(clashes)
-    padding_length = len(str(total_clashes))
+    grouped_clashes = defaultdict(list)
 
-    for i, (ref_id, latest_id, severity) in enumerate(clashes, start=1):
-        clash_number = str(i).zfill(padding_length)
-        combined_message = f"Clash {clash_number}: between {ref_id} and {latest_id} with severity {severity:.2f}"
-        object_ids = [ref_id, latest_id]
+    for ref, latest in clashes:
+        if not latest:
+            continue
+        grouped_clashes[ref].append(latest)
 
-        # Assuming severity levels: Low (<0.25), Medium (0.25-0.75), High (>0.75) TODO: Determine severity levels
-        if severity > 0.75:
-            category = "High"
-        elif severity > 0.25:
-            category = "Medium"
-        else:
-            category = "Low"
+    for group_number, clashing_objects in enumerate(grouped_clashes.items(), start=1):
+
+        ref_id, latest_elements = clashing_objects
+
+        all_clashing_objects = [ref_id] + [element_id for element_id in  latest_elements]
 
         automate_context.attach_error_to_objects(
-            category=category, object_ids=object_ids, message=combined_message
+            category="Clash", object_ids=all_clashing_objects, message=str(group_number)
         )
 
     return clashes

@@ -3,7 +3,13 @@
 # Speckle Automate Function: Basic Clash Analysis Demo
 
 ## Overview
-This repository hosts the Basic Clash Analysis Demo for Speckle Automate, tailored for the AEC industry. It demonstrates automated clash detection using complex third-party libraries to analyze elements from both a static reference model and a dynamic model.
+This repository hosts the Basic Clash Analysis Demo for Speckle Automate, which is tailored for the AEC industry. It demonstrates automated clash detection using complex third-party libraries to analyze elements from static and dynamic reference models.
+
+<img src="https://github.com/specklesystems/speckle_automate-basic_clash_demo/assets/760691/b4df8124-e859-4fca-bdda-7bdcecd9f81b" height="159px" title="Clash Detected!">
+<img src="https://github.com/specklesystems/speckle_automate-basic_clash_demo/assets/760691/3672947a-3e22-490d-b0a2-070384ca88d7" height="150px" title="Location in Context">
+<img height="150" alt="Screenshot 2023-11-13 222423" src="https://github.com/specklesystems/speckle_automate-basic_clash_demo/assets/760691/9b0c8006-3ea9-4b96-8c23-01fb136131c5">
+<img height="150" alt="Screenshot 2023-11-13 222407" src="https://github.com/specklesystems/speckle_automate-basic_clash_demo/assets/760691/a40150b1-97bb-4b49-964e-89d4f2f55b6a">
+<img src="https://github.com/specklesystems/speckle_automate-basic_clash_demo/assets/760691/c5472806-651e-461e-b902-fb93536ab8ab" height="150px" title="Runs on every Publisj Event">
 
 ## ⚠️ Disclaimer: Conceptual Demonstration Only
 **IMPORTANT: This function is a conceptual model and is not intended for actual use in production environments. It serves as a demonstration to illustrate automated clash detection principles in Speckle Automate and the use of third-party libraries for advanced analysis.**

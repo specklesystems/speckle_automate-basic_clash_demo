@@ -4,8 +4,6 @@ dist/
 *.egg-info/
 .cache/
 *.log
-.ruff_cache/
-.venv/
 .env/
 .git/
 Dockerfile copy*

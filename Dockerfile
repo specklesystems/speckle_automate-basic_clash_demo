@@ -247,3 +247,5 @@ COPY . /home/speckle
 # Using poetry, we generate a list of requirements, save them to requirements.txt, and then use pip to install them
 RUN poetry export --format requirements.txt --output /home/speckle/requirements.txt --without-hashes && \
     pip install --requirement /home/speckle/requirements.txt
+
+RUN poetry install --no-root
