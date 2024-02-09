@@ -7,7 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-specklepy = "2.17.11"
+specklepy = "2.17.17"
 trimesh = "^4.0.4"
 pytest = "^7.4.2"
 python-dotenv = "^1.0.0"
