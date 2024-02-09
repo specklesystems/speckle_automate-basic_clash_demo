@@ -2,6 +2,7 @@
 
 use the automation_context module to wrap your function in an Automate context helper
 """
+
 from collections import defaultdict
 from typing import Optional
 
@@ -44,19 +45,22 @@ class FunctionInputs(AutomateBase):
         Negative values relaxes the test, positive values make it more strict.",
         json_schema_extra={
             "readOnly": True,
-        }
+        },
     )
     tolerance_unit: str = Field(  # Using the SpecklePy Units enum here
         default=Units.mm,
-        json_schema_extra={"examples": ["mm", "cm", "m"], "readOnly": True},
         title="Tolerance Unit",
         description="Unit of the tolerance value.",
+        json_schema_extra={
+          "examples": ["mm", "cm", "m"], 
+          "readOnly": True
+        },
     )
 
 
 def automate_function(
-        automate_context: AutomationContext,
-        function_inputs: FunctionInputs,
+    automate_context: AutomationContext,
+    function_inputs: FunctionInputs,
 ) -> None:
     """This is an example Speckle Automate function.
 
@@ -71,10 +75,12 @@ def automate_function(
     changed_model_version = automate_context.receive_version()
 
     try:
-        reference_model_version, reference_model_id, reference_model_version_id = get_reference_model(
-            automate_context, function_inputs.static_model_name
+        reference_model_version, reference_model_id, reference_model_version_id = (
+            get_reference_model(automate_context, function_inputs.static_model_name)
         )
-        print(f"Reference model id: {reference_model_id}, version id: {reference_model_version_id}")
+        print(
+            f"Reference model id: {reference_model_id}, version id: {reference_model_version_id}"
+        )
 
     except Exception as ex:
         automate_context.mark_run_failed(status_message=str(ex))
@@ -100,6 +106,8 @@ def automate_function(
         "Objects.BuiltElements.Duct",
         "Objects.BuiltElements.Duct:Objects.BuiltElements.Revit.RevitDuct",
         "Objects.BuiltElements.Duct:Objects.BuiltElements.Revit.RevitDuct:Objects.BuiltElements.Revit.RevitFlexDuct",
+        "Objects.Other.Revit.RevitInstance:Objects.BuiltElements.Revit.RevitMEPFamilyInstance",
+        "Objects.BuiltElements.Revit.RevitElementType:Objects.BuiltElements.Revit.RevitSymbolElementType"
     ]
 
     visible_beams_rule = element_rules.rule_combiner(
@@ -138,20 +146,20 @@ def automate_function(
             status_message="Clash detection failed. No objects to compare."
         )
         return
-    
+
     clashes = detect_and_report_clashes(
         reference_mesh_elements, latest_mesh_elements, tolerance, automate_context
     )
-   
+
     percentage_reference_objects_clashing = (
-            len(set([ref_id for ref_id, latest_id in clashes]))
-            / len(reference_mesh_elements)
-            * 100
+        len(set([ref_id for ref_id, latest_id in clashes]))
+        / len(reference_mesh_elements)
+        * 100
     )
     percentage_latest_objects_clashing = (
-            len(set([latest_id for ref_id, latest_id in clashes]))
-            / len(latest_mesh_elements)
-            * 100
+        len(set([latest_id for ref_id, latest_id in clashes]))
+        / len(latest_mesh_elements)
+        * 100
     )
 
     # all clashes count
@@ -177,7 +185,7 @@ def automate_function(
 
 
 def get_reference_model(
-        automate_context: AutomationContext, static_model_name: str
+    automate_context: AutomationContext, static_model_name: str
 ) -> tuple[Base, Optional[str], Optional[str]]:
     # the static reference model will be retrieved from the project using model name stored in the inputs
     speckle_client = automate_context.speckle_client
